@@ -14,11 +14,9 @@ from bs4 import BeautifulSoup
 
 class LyricsCrawler:
 
-  # get / manage access token at https://genius.com/api-clients
-  client_access_token = 'your_token_here'
-
-
-  def __init__(self, artists): 
+  def __init__(self, token, artists):
+    # get / manage access token at https://genius.com/api-clients
+    self.client_access_token = token
     self.artists = artists
     self.df = pd.DataFrame(columns=['Artist','Title', 'url'])
 
