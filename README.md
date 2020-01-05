@@ -82,5 +82,8 @@ So In Love | I’m Sorry I Made You Cry 	 | Spring Will Be A Little Late This Ye
 
 ## Generative Model
 
-TODO! The goal is to impelement a generative neural network that outputs a jazz song and record it! :)
+**In Progress!** 
 
+The goal is to implement a generative neural network that outputs a jazz song and then record it! :)
+
+Currently, I'm working on a class for lyrics generation. Preprocessing, architectural choices of the model (such as whether to use a word or character level basis) and more can be found in the notebook. I'll update this readme once the model outputs first results.
