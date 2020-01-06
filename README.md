@@ -86,4 +86,8 @@ So In Love | I’m Sorry I Made You Cry 	 | Spring Will Be A Little Late This Ye
 
 The goal is to implement a generative neural network that outputs a jazz song and then record it! :)
 
-Currently, I'm working on a class for lyrics generation. Preprocessing, architectural choices of the model (such as whether to use a word or character level basis) and more can be found in the notebook. I'll update this readme once the model outputs first results.
+Currently, I'm working on a class for lyrics generation. Check the notebook to see the progress!
+
+```
+lyricsgen = LyricsGenerator(lyrics_config, df['lyrics'])
+```
