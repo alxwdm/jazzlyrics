@@ -82,5 +82,47 @@ So In Love | I’m Sorry I Made You Cry 	 | Spring Will Be A Little Late This Ye
 
 ## Generative Model
 
-TODO! The goal is to impelement a generative neural network that outputs a jazz song and record it! :)
+**In Progress! See jupyter notebook for details.** 
 
+The goal is to implement a generative neural network that outputs a jazz song and then record it! :)
+
+The LyricsGenerator takes a config dictionary with hyperparameters and a corpus (= JazzLyrics Dataset) as input arguments. It then preprocesses the input corpus, i.e. tokenization and creation of id-word-mappings. In order to decrease the model size, infrequent words are replaced by an out-of-vocabulary token <OOV>. In addition, the mini-batches that are used for training are created. The X_mini samples contain a semi-redundant window of the song lyrics. Y_mini shifts the words by one, so that it can be used as output label for models returning whole sequences. Currently, a single-word-prediction is implemented, meaning that only the next word of the input sequence is used as a target label (Y_mini_s) for training.
+
+```
+lyricsgen = LyricsGenerator(lyrics_config, df['lyrics'])
+
+Preprocessing input corpus...
+Total Word count:   388149
+Unique word count:  11833
+Vocabulary size:    4674
+Generating mini-batches...
+Shape of X_mini:    (121362, 10, 1)
+Shape of Y_mini:    (121362, 10, 1)
+Shape of Y_mini_s:  (121362, 1)
+```
+
+At the moment, I'm using a model with an Embedding layer at the beginning to avoid one-hot-encoding of the mini-batches and two LSTM layers (one of which is Bidirectional), resulting in about 800k parameters in total. A save and load function in the LyricsGenerator class enables to continue model training when re-instantiating the runtime. 
+
+To sample the next word, a random choice from the predicted probability distribution of the last softmax layer is used. Out-of-vocabulary tokens are skipped and an OOV counter avoids being stuck in an infinity loop by aborting the sampling when the counter overflows. 
+
+As a sanity-check, I'm trying to re-generate a song text from the training set: "Fly me to the moon". After about 100 epochs, the model starts to predict next words that are actually contained in the song (care, for), although the word probability (= confidence) is pretty low and the resulting output is glibberish.
+
+```
+my_text = 'Fly me to the moon let me play among the' 
+lyricsgen.sample(my_text, 20)
+
+Generating lyrics with 20 additional words...
+---- 0 ----
+Max prob val: 0.300 and wrd: the
+---- 1 ----
+Max prob val: 0.189 and wrd: for
+---- 2 ----
+Max prob val: 0.249 and wrd: care
+---- 3 ----
+Max prob val: 0.354 and wrd: in
+--------
+
+Generated song lyrics:
+Fly me to the moon let me play among the the beginning fence in away a in start in cream the ? , the is song moon day mine i
+
+```
