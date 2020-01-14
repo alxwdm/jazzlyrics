@@ -7,6 +7,14 @@
 
 from nltk.tokenize import word_tokenize
 from collections import Counter
+import numpy as np
+import pandas as pd
+import tensorflow as tf
+
+
+# TensorFlow
+%tensorflow_version 2.x
+import tensorflow as tf
 
 class LyricsGenerator:
   """
