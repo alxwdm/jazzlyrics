@@ -80,13 +80,11 @@ Fly Me to the Moon| My Baby Just Cares For Me | The Summer Knows | Dreamy | Sing
 Tenderly | What a Funny Girl (You Used to Be) | Sunday, Monday or Always | Perdido | Get Your Kicks On Route 66
 So In Love | I’m Sorry I Made You Cry 	 | Spring Will Be A Little Late This Year 	 | The Nearness Of You | Brahm’s Lullaby
 
-## Generative Model
-
-**In Progress! See jupyter notebook for details.** 
+## Lyrics Generation - Implementation and Training
 
 The goal is to implement a generative neural network that outputs a jazz song and then record it! :)
 
-The LyricsGenerator class takes a config dictionary with hyperparameters and a corpus (= JazzLyrics Dataset) as input arguments. It then preprocesses the input corpus, i.e. tokenization and creation of id-word-mappings. In order to decrease the model size, infrequent words are replaced by an out-of-vocabulary token <OOV>. In addition, the mini-batches that are used for training are created. The X_mini samples contain a semi-redundant window of the song lyrics. Y_mini shifts the words by one, so that it can be used as output label for models returning whole sequences. Currently, a single-word-prediction is implemented, meaning that only the next word of the input sequence is used as a target label (Y_mini_s) for training.
+The LyricsGenerator class takes a config dictionary with hyperparameters and a corpus (= JazzLyrics Dataset) as input arguments. It then preprocesses the input corpus, i.e. tokenization and creation of id-word-mappings. In order to decrease the model size, infrequent words are replaced by an out-of-vocabulary token (OOV). In addition, the mini-batches that are used for training are created. The X_mini samples contain a semi-redundant window of the song lyrics. Y_mini shifts the words by one, so that it can be used as ground-truth-label for models returning whole sequences. Currently, a single-word-prediction is implemented, meaning that only the next word of the input sequence is used as a target label (Y_mini_s) for training.
 
 ```
 lyricsgen = LyricsGenerator(lyrics_config, df['lyrics'])
@@ -116,12 +114,11 @@ Max prob val: 0.189 and wrd: for
 Max prob val: 0.249 and wrd: care
 ---- 3 ----
 Max prob val: 0.354 and wrd: in
---------
 ```
 
-## Lyrics Generation results
+## Lyrics Generation - Results
 
-I have trained a model with about 2.5 million parameters for roughly 700 epochs which took a few hours in total in Google colab. The accuracy of the predicted next word of the training set sets at about 56%. The quality of the generated lyrics is not really good:
+I have trained a model with about 2.5 million parameters for roughly 700 epochs which took a few hours in total in Google colab. The accuracy of the predicted next word of the training set sets at about 56% and does not increase any further. The quality of the generated lyrics is not really good:
 
 ```
 Generated song lyrics:
