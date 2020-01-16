@@ -118,11 +118,11 @@ Max prob val: 0.354 and wrd: in
 
 ## Lyrics Generation - Results
 
-I have trained a model with about 2.5 million parameters for roughly 700 epochs which took a few hours in total in Google colab. The accuracy of the predicted next word of the training set sets at about 56% and does not increase any further. The quality of the generated lyrics is not really good:
+I have trained a model with about 2.5 million parameters for roughly 700 epochs which took a few hours in total using Google colab. The accuracy of the predicted next word of the training set settles at about 56% and does not increase any further. Given the low training accuracy, it does not suprise that the quality of the generated lyrics is not really good:
 
 ```
 Generated song lyrics:
 Fly me to the moon let me play among the beginning fence in away a in start in cream the ? , the is song moon day mine i
 ```
 
-Finally, I looked out for some comparable projects (which I did not at the beginning to maximize my learning effect by trying out my own thoughts first). Very similar thoughts and problems can be found in [this article](https://medium.com/coinmonks/word-level-lstm-text-generator-creating-automatic-song-lyrics-with-neural-networks-b8a1617104fb). The spanish lyrics at the end are quite good, but both the input corpus (>1 million training samples) and the model itself (16.5 million parameters) is larger than in my case. Take for example the Embedding size: I used 100 as a first guess, the articel proposes 1024. Hence, I think a larger model will be needed to generate somewhat authentic jazz lyrics. I'll try train a larger model in the future!
+Finally, I looked out for some comparable projects (which I did not at the beginning to maximize my learning effect by trying out my own thoughts first). A very similar approach (and similar problems) can be found in [this article](https://medium.com/coinmonks/word-level-lstm-text-generator-creating-automatic-song-lyrics-with-neural-networks-b8a1617104fb). The generated lyrics at the end sound quite good, but both the input corpus and the model itself (16.5 million parameters) is larger than in my case. Hence, I think a larger model is needed to generate somewhat authentic lyrics - to be done in the future.
