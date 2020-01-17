@@ -1,20 +1,18 @@
 # LyricsGenerator Class
-# Used for jazz style lyrics generation 
-# - Preprocesses input corpus (tokenization, encoding, vectorization, ...)
-# - creates (or loads pre-trained) keras model
-# - trains and saves model
-# - generates new song lyrics
-
 from nltk.tokenize import word_tokenize
 from collections import Counter
 import numpy as np
 import pandas as pd
 import tensorflow as tf
 
+
 class LyricsGenerator:
   """
-  (work in progress)
   This class is used for training a generative model that outputs Jazz lyrics.
+     * Preprocesses input corpus (tokenization, encoding, vectorization, ...)
+     * creates (or loads pre-trained) keras model
+     * trains and saves model
+     * generates new song lyrics 
   """
 
   def __init__(self, config, corpus):
@@ -121,9 +119,9 @@ class LyricsGenerator:
       song = [self.word_id['<OOV>']]*(self.mini_batch_len-1) + song
 
       # iterate over one song from tokenized corpus to create mini-batches
-      for i in range(0, len(song) - (self.mini_batch_len+1), self.mini_batch_step):
+      for i in range(0, len(song) - self.mini_batch_len, self.mini_batch_step):
         self.X_mini.append(song[i: i + self.mini_batch_len])
-        self.Y_mini_s.append(song[i+self.mini_batch_len+1])
+        self.Y_mini_s.append(song[i+self.mini_batch_len])
 
     # Convert to array in correct shape
     self.X_mini = np.asarray(self.X_mini)
@@ -193,7 +191,7 @@ class LyricsGenerator:
       self.model.add(tf.keras.layers.Bidirectional(
                     tf.keras.layers.LSTM(self.n_units_1, return_sequences=True))) 
        
-    # Else use Bidirectional as first Layer    
+    # Else use Bidirectional as first Layer (currently not supported)  
     else:
       self.model.add(tf.keras.layers.Bidirectional(
                    tf.keras.layers.LSTM(self.n_units_1, return_sequences=True),
@@ -203,10 +201,6 @@ class LyricsGenerator:
     # Following Layers (independenant of Embedding)
     self.model.add(tf.keras.layers.Dropout(self.dropout_rate))
     self.model.add(tf.keras.layers.LSTM(self.n_units_2, return_sequences=False))
-    self.model.add(tf.keras.layers.Dense(self.idmap_len/64, 
-                                        activation='relu', 
-                                        kernel_regularizer=
-                                         tf.keras.regularizers.l2(self.l2_reg)))
     self.model.add(tf.keras.layers.Dense(self.idmap_len, 
                                         activation='softmax'))
 
@@ -245,18 +239,19 @@ class LyricsGenerator:
     seed_text = word_tokenize(seed_text)
     seed_toks = [self.word_id[word.lower()] for word in seed_text]
 
-    # fill seed text length to 10 tokens
-    if len(seed_toks) < 10:
-      seed_toks = [0] * abs(len(seed_toks)-10) + seed_toks
+    # fill seed text length to self.mini_batch_len tokens
+    if len(seed_toks) < self.mini_batch_len:
+      seed_toks = [0] * abs(len(seed_toks)-self.mini_batch_len) + seed_toks
 
     counter = 0
     oov_counter = 0
 
     # generate new text
     while counter < text_len:
-      # get propability distribution for next word, use only last x words
+      # get propability distribution for next word
+      # use only last self.mini_batch_len words
       # shape of y_pred is (x, 1, vocab_size)
-      next_seed = np.asarray(seed_toks[-10:]).reshape(1,10)
+      next_seed = np.asarray(seed_toks[-self.mini_batch_len:]).reshape(1,self.mini_batch_len)
       y_pred = self.model.predict(next_seed) 
 
       # Only for debugging the model and sampling process!
